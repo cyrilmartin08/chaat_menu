@@ -1,0 +1,57 @@
+import java.util.Scanner;
+class ChaatsMenu {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+        int quantity;
+        double cost = 0;
+
+        do {
+            System.out.println(" CHAATS MENU:");
+            System.out.println("1. Pani Puri - Rs. 30");
+            System.out.println("2. Bhel Puri - Rs. 35");
+            System.out.println("3. Masala Puri - Rs. 40");
+            System.out.println("4. Dahi Puri - Rs. 45");
+            System.out.println("5. Sev Puri - Rs. 50");
+            System.out.println("6. Exit");
+            System.out.print("Enter the chaat item number (1-5) or 6 to exit: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    cost += calculateCost("Pani Puri", 30,sc);
+                    break;
+                case 2:
+                    cost += calculateCost("Bhel Puri", 35, sc);
+                    break;
+                case 3:
+                    cost += calculateCost("Masala Puri", 40, sc);
+                    break;
+                case 4:
+                    cost += calculateCost("Dahi Puri", 45, sc);
+                    break;
+                case 5:
+                    cost += calculateCost("Sev Puri", 50, sc);
+                    break;
+                case 6:
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+                    break;
+            }
+        } while (choice != 6);
+
+        System.out.println("Total cost for the chaats: Rs. " + cost);
+        System.out.println("Thank you for your order!");
+    }
+
+    public static double calculateCost(String itemName, double itemPrice, Scanner sc) {
+        System.out.print("Enter the quantity(Plate) of " + itemName + " you'd like to order: ");
+        int quantity = sc.nextInt();
+        double itemCost = itemPrice * quantity;
+        System.out.println("---------------------------------------------------------------");
+        System.out.println(quantity + " " + itemName + "(s) : Rs. " + itemCost);
+        System.out.println("---------------------------------------------------------------");
+        return itemCost;
+    }
+}
