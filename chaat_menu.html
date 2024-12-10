@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cyril's Chaat Menu</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f1f1f1;
+    }
+
+    .menu-item {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin: 5px;
+      font-size: 16px;
+    }
+
+    .menu-item:hover {
+      background-color: #45a049;
+    }
+
+    .menu-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .menu-item img {
+      max-width: 100px;
+      height: auto;
+      margin-right: 10px;
+    }
+
+    #receipt {
+      margin-top: 20px;
+      text-align: left;
+      padding: 10px;
+      background-color: white;
+      border: 1px solid #ddd;
+    }
+
+    #receipt h2, #receipt p {
+      margin: 0;
+    }
+
+    #qr-code {
+      margin-top: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cyril's Chaats</h1>
+  <p>Udayanagar, Bengaluru, Karnataka 560016</p>
+
+  <div class="menu-container">
+    <div class="menu-item" onclick="addToOrder(1, 'Pani Puri', 30)">
+      <img src="pani-puri.jpg" alt="Pani Puri">
+      Pani Puri - Rs. 30
+    </div>
+    <div class="menu-item" onclick="addToOrder(2, 'Bhel Puri', 35)">
+      <img src="bhel-puri.jpg" alt="Bhel Puri">
+      Bhel Puri - Rs. 35
+    </div>
+    <div class="menu-item" onclick="addToOrder(3, 'Masala Puri', 40)">
+      <img src="masala-puri.jpg" alt="Masala Puri">
+      Masala Puri - Rs. 40
+    </div>
+    <div class="menu-item" onclick="addToOrder(4, 'Sev Puri', 45)">
+      <img src="sev-puri.jpg" alt="Sev Puri">
+      Sev Puri - Rs. 45
+    </div>
+    <div class="menu-item" onclick="addToOrder(5, 'Dahi Puri', 50)">
+      <img src="dahi-puri.jpg" alt="Dahi Puri">
+      Dahi Puri - Rs. 50
+    </div>
+  </div>
+
+  <div id="receipt">
+    <h2>Your Order:</h2>
+    <p id="bill-number"></p>
+    <p>Date: <span id="date"></span></p>
+    <div id="order-details"></div>
+    <p id="total-amount">Total Amount: Rs. 0</p>
+    <button onclick="generateQRCode()">Pay Now</button>
+  </div>
+
+  <div id="qr-code">
+    <h3>Scan to Pay</h3>
+    <img id="qr-code-image" alt="QR Code">
+    <p>This QR code will expire in 1 minute.</p>
+  </div>
+
+  <script>
+    let order = {};
+    let totalAmount = 0;
+    let billNumber = 0;
+
+    // Initialize date and bill number
+    document.getElementById("date").textContent = new Date().toLocaleDateString();
+    updateBillNumber();
+
+    function addToOrder(itemNumber, itemName, itemPrice) {
+      if (itemNumber in order) {
+        order[itemNumber].quantity++;
+      } else {
+        order[itemNumber] = { name: itemName, quantity: 1, price: itemPrice };
+      }
+      totalAmount += itemPrice;
+      updateReceipt();
+    }
+
+    function updateReceipt() {
+      let orderDetails = "";
+      for (let itemNumber in order) {
+        const item = order[itemNumber];
+        orderDetails += `${item.name} - Quantity: ${item.quantity} - Amount: Rs. ${item.quantity * item.price}<br>`;
+      }
+      document.getElementById("order-details").innerHTML = orderDetails;
+      document.getElementById("total-amount").textContent = `Total Amount: Rs. ${totalAmount}`;
+    }
+
+    function updateBillNumber() {
+      billNumber++;
+      document.getElementById("bill-number").textContent = `Bill No: ${billNumber}`;
+    }
+
+    function generateQRCode() {
+      const qrCodeElement = document.getElementById("qr-code");
+      const qrCodeImage = document.getElementById("qr-code-image");
+
+      // Cyril's Chaats UPI details
+      const upiID = "cyrilschaats@upi";
+      const name = "Cyril's Chaats";
+      const url = `upi://pay?pa=${upiID}&pn=${encodeURIComponent(name)}&am=${totalAmount}&cu=INR`;
+
+      qrCodeImage.src = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(url)}&size=200x200`;
+
+      qrCodeElement.style.display = "block";
+
+      // Hide QR code after 1 minute
+      setTimeout(() => {
+        qrCodeElement.style.display = "none";
+      }, 60000);
+    }
+  </script>
+</body>
+</html>
