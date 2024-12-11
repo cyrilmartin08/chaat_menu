@@ -180,7 +180,7 @@
     let billNumber = 0;
     let paymentTimer;
 
-    document.getElementById("date").textContent = new Date().toLocaleDateString();
+    document.getElementById("date").textContent = new Date().toLocaleDateString('en-GB');
     updateBillNumber();
 
     function addToOrder(itemNumber, itemName, itemPrice) {
